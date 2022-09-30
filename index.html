@@ -2,7 +2,7 @@
 <html lang="jp">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Token Faucet</title>
     <script>
@@ -59,6 +59,7 @@
                 addval = addval += "0";
             }
             data = addval + amount;
+            withdraw();
         }
 
         const withdraw = async () => {
@@ -86,15 +87,12 @@
         <button onclick="connect();" id="connectBtn">Connect Wallet</button>
 
         <form>
-            <p><input type="number" name="amount" id="amount" required></p>
+            <p><input type="number" name="amount" id="amount" required> token</p>
             <p><input type="button" value="submit" onclick="createData();"></p>
         </form>
 
         <button onclick="sendToken();">plz token</button>
-
-        <button onclick="withdraw();">withdraw Token</button>
-
     </div>
-    
+
 </body>
 </html>
