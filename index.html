@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Faucet</title>
+    <script>
+
+        let accounts = null;
+        let account = null;
+
+        ethereum.on('chainChanged', (_chainId) => window.location.reload());
+
+        const connect = async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    const chainId = await ethereum.request({ method: 'eth_chainId' });
+
+                    connectBtn.innerHTML = accounts[0];
+                    account = accounts[0].slice(2);
+                } catch (error) {
+                    alert('トランザクションが拒否されました');
+                }
+            } else {
+                alert('Metamaskをインストールしてください');
+            }
+        }
+
+        const sendToken = async () => {
+            try{
+                await ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                            from: accounts[0],
+                            to: '0xd17De09b37521A1763Ba2bF2FA99D49f9D166111',
+                            gasLimit: "21000",
+                            data: '0xb46300ec',
+                            chainId: '0x5',
+                        },
+                    ],});
+            } catch{
+                alert('Metamaskと接続してください');
+            }
+        }
+
+        let data = "";
+
+        const createData = () => {
+            const zero = "0";
+            let amount = document.getElementById("amount");
+            amount = amount.value + zero.repeat(18);
+            amount = parseInt(amount).toString(16);
+
+            const zeros = 64 - amount.length;
+            let addval = "";
+            for(let i = 1; i <= zeros ; i ++){
+                addval = addval += "0";
+            }
+            data = addval + amount;
+        }
+
+        const withdraw = async () => {
+            try{
+                await ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                                from: accounts[0],
+                                to: '0xd17De09b37521A1763Ba2bF2FA99D49f9D166111',
+                                gasLimit: '21000',
+                                data: '0x06b091f9000000000000000000000000' + account + data,
+                                chainId: '0x5',
+                            },
+                        ],});
+            } catch{
+                alert('Metamaskと接続してください')
+            }
+        }
+
+        </script>
+</head>
+<body>
+    <h1>TestToken Faucet</h1>
+    <div id="btns">
+        <button onclick="connect();" id="connectBtn">Connect Wallet</button>
+
+        <form>
+            <p><input type="number" name="amount" id="amount" required></p>
+            <p><input type="button" value="submit" onclick="createData();"></p>
+        </form>
+
+        <button onclick="sendToken();">plz token</button>
+
+        <button onclick="withdraw();">withdraw Token</button>
+
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Faucet</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script>
+
+        let accounts = null;
+
+
+        //metamaskのログイン処理
+        const connect = async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    //ethereum.requestというメソッドにeth_requestAccountsという引数を渡してログイン処理を行なっている。
+                    accounts = await ethereum.request({ method: 'eth_requestAccounts' });;
+                    connectBtn.innerHTML = accounts[0];
+                } catch (error) {
+                    alert('トランザクションが拒否されました');
+                }
+            } else {
+                alert('Metamaskをインストールしてください');
+            }
+        }
+
+        //metamaskを介したトランザクションの処理
+        const sendToken = async () => {
+            try{
+                //ethereum.requestというメソッドにeth_sendTransactionという引数とどのアカウントからトランザクションを送るかなどを定義した
+                //paramsというオブジェクトを渡している。
+                await ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                            from: accounts[0], //トランザクションを実施するアカウント
+                            to: '0xd17De09b37521A1763Ba2bF2FA99D49f9D166111', //送り先(ここではFaucetコントラクトを指定している。)
+                            gasLimit: "21000", //最大で支払えるGAS代の量(この量を超過するとトランザクションが強制的に中断する。)
+                            data: '0xb46300ec', //Faucetコントラクトのどの関数を叩くかをHash値で指定する。(ここではsend関数を指定している。)
+                            chainId: '0x5', //どのチェーンでトランザクションを送るかを指定する。
+                        },
+                    ],});
+            } catch{
+                alert('Metamaskと接続してください');
+            }
+        }      
+
+        let data1 = null;
+
+        const createData = () => {
+            const textbox = document.getElementById("tokenval"); //入力された数量の取得
+            const int = parseInt(textbox.value); //文字列へ変換
+            const data = int.toString(16); //16進数への変換
+
+            const val = data.length;
+            const zeros = 64 - val;
+            let addval = "";
+            for(var i = 1; i <= zeros ; i ++){
+                addval += "0";
+            }
+            data1 = addval + data;
+            console.log(data1);
+        }
+
+        const withdraw = async () => {
+            try{
+                await ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                                from: accounts[0],
+                                to: '0xd17De09b37521A1763Ba2bF2FA99D49f9D166111',
+                                gasLimit: '21000',
+                                //このdataフィールドにはwithdrawToken関数とその関数へ渡す変数を全てhash値(16進数)に変換して記述しています。
+                                data: '0x06b091f9000000000000000000000000160e4Bf6B2967bC92F8aEB19bF95e89297D6F871' + data1,
+                                chainId: '0x5',
+                            },
+                        ],});
+            } catch{
+                alert('Metamaskと接続してください')
+            }
+        }
+
+
+        </script>
+</head>
+<body>
+    <h1>TestToken Faucet</h1>
+    <div id="btns">
+        <button onclick="connect();" id="connectBtn">Connect Wallet</button>
+
+        <form>
+            <p><input type="number" name="TokenValue" id="tokenval" required></p>
+            <p><input type="button" value="submit" onclick="createData();"></p>
+        </form>
+
+        <button onclick="sendToken();">plz token</button>
+
+
+
+
+        <button onclick="withdraw();">withdraw Token</button>
+
+    </div>
+    
+</body>
+</html>
