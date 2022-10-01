@@ -5,18 +5,21 @@
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Token Faucet</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
     <script>
 
         let accounts = null;
         let account = null;
-
-        ethereum.on('chainChanged', (_chainId) => window.location.reload());
 
         const connect = async () => {
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     accounts = await ethereum.request({ method: 'eth_requestAccounts' });
                     const chainId = await ethereum.request({ method: 'eth_chainId' });
+                    await ethereum.request({ 
+                        method: 'wallet_switchEthereumChain', 
+                        params: [{ chainId: '0x5' }],
+                    });
 
                     connectBtn.innerHTML = accounts[0];
                     account = accounts[0].slice(2);
@@ -79,6 +82,18 @@
             }
         }
 
+        const callMethod = async () => {
+            await ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    from: account[0],
+                    to: '0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8',
+                    data: '0x38cc4831',
+                }],
+            })
+        }
+
+
         </script>
 </head>
 <body>
@@ -91,7 +106,7 @@
             <p><input type="button" value="submit" onclick="createData();"></p>
         </form>
 
-        <button onclick="sendToken();">plz token</button>
+        <button onclick="callMethod();">plz token</button>
     </div>
 
 </body>
