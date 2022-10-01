@@ -37,7 +37,7 @@
                 method: 'eth_sendTransaction',
                 params: [{
                             from: accounts[0],
-                            to: '0xd17De09b37521A1763Ba2bF2FA99D49f9D166111',
+                            to: '0xd17de09b37521a1763ba2bf2fa99d49f9d166111',
                             gasLimit: "21000",
                             data: '0xb46300ec',
                             chainId: '0x5',
@@ -71,7 +71,7 @@
                     method: 'eth_sendTransaction',
                     params: [{
                                 from: accounts[0],
-                                to: '0xd17De09b37521A1763Ba2bF2FA99D49f9D166111',
+                                to: '0xd17de09b37521a1763ba2bf2fa99d49f9d166111',
                                 gasLimit: '21000',
                                 data: '0x06b091f9000000000000000000000000' + account + data,
                                 chainId: '0x5',
@@ -81,15 +81,19 @@
                 alert('Metamaskと接続してください')
             }
         }
-
-        const callMethod = async () => {
+    
+        const addToken = async () => {
             await ethereum.request({
-                method: 'eth_sendTransaction',
-                params: [{
-                    from: account[0],
-                    to: '0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8',
-                    data: '0x38cc4831',
-                }],
+                method: 'wallet_watchAsset',
+                params: {
+                    type: 'ERC20',
+                    options: {
+                        address: '0xfEa635810578aFe088389D3453AA5Ab2Db33A4A8', 
+                        symbol: 'TST', 
+                        decimals: 18, 
+                        image: 'https://s2.coinmarketcap.com/static/img/coins/200x200/1.png',
+                    },
+                },
             })
         }
 
@@ -106,7 +110,7 @@
             <p><input type="button" value="submit" onclick="createData();"></p>
         </form>
 
-        <button onclick="callMethod();">plz token</button>
+        <button onclick="addToken();">add token</button>
     </div>
 
 </body>
