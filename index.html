@@ -31,6 +31,7 @@
             }
         }
 
+        
         const sendToken = async () => {
             try{
                 await ethereum.request({
@@ -50,6 +51,9 @@
 
         let data = "";
 
+        //コントラクトへトランザクションを行う際のdataを作成している。
+        //withdraw関数の引数に渡すaccountとamountを256byteのhash値に変換している。
+
         const createData = () => {
             const zero = "0";
             let amount = document.getElementById("amount");
@@ -65,33 +69,37 @@
             withdraw();
         }
 
+        //コントラクトから数量を指定してトークンを貰う
+
         const withdraw = async () => {
             try{
                 await ethereum.request({
                     method: 'eth_sendTransaction',
                     params: [{
                                 from: accounts[0],
-                                to: '0xd17de09b37521a1763ba2bf2fa99d49f9d166111',
+                                to: 'コントラクトのアドレス',
                                 gasLimit: '21000',
                                 data: '0x06b091f9000000000000000000000000' + account + data,
-                                chainId: '0x5',
+                                chainId: 'チェーンのID', //コントラクトをデプロイしたチェーンをここに入れてください。
                             },
                         ],});
             } catch{
                 alert('Metamaskと接続してください')
             }
         }
-    
+
+        //トークンを追加するメソッド。
+
         const addToken = async () => {
             await ethereum.request({
                 method: 'wallet_watchAsset',
                 params: {
                     type: 'ERC20',
                     options: {
-                        address: '0xfEa635810578aFe088389D3453AA5Ab2Db33A4A8', 
-                        symbol: 'TST', 
+                        address: 'トークンのアドレス', 
+                        symbol: 'トークンのシンボル', 
                         decimals: 18, 
-                        image: 'https://s2.coinmarketcap.com/static/img/coins/200x200/1.png',
+                        image: 'トークンの画像',
                     },
                 },
             })

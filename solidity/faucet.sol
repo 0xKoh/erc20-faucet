@@ -36,7 +36,7 @@ contract testTokenFaucet {
     mapping(address=>uint256) nextRequestAt;
     
     // send関数(トークンを引数に入ったアドレスへ送る関数)で使用されている変数で、送信するトークンの量を定義している。
-    uint256 faucetDripAmount = 100;
+    uint256 faucetDripAmount = 10;
     
     /** 
     このconstructor内の処理はコントラクトをデプロイするときに実行される。変数や関数などを定義することができる。
