@@ -31,24 +31,6 @@
             }
         }
 
-        
-        const sendToken = async () => {
-            try{
-                await ethereum.request({
-                method: 'eth_sendTransaction',
-                params: [{
-                            from: accounts[0],
-                            to: '0xd17de09b37521a1763ba2bf2fa99d49f9d166111',
-                            gasLimit: "21000",
-                            data: '0xb46300ec',
-                            chainId: '0x5',
-                        },
-                    ],});
-            } catch{
-                alert('Metamaskと接続してください');
-            }
-        }
-
         let data = "";
 
         //コントラクトへトランザクションを行う際のdataを作成している。
